@@ -18,9 +18,22 @@ Please read the DISCLAIMER section carefully.
 
 ## Project structure
 
-Scripts...
+### BAStudio & BAW
+```
+└── baw
+    ├── export
+    ├── output
+    ├── scripts
+    └── templates
+```
 
-Templates...
+#### Export folder
+
+#### Output folder
+
+#### Scripts folder
+
+#### Templates folder
 
 
 ## Business Automation Workflow
@@ -32,7 +45,11 @@ Templates...
 ## Command examples
 
 ```bash
-./baw-list.sh -c ../../../cp4ba-installations/configs25.0.1/env1-runtime-baw-bai-perf-test.properties -s -d -e
+# authoring environment
+./baw-list-export-configs.sh -c ../../../cp4ba-installations/configs25.0.1/env1-authoring-baw-bai-onedb-int.properties -s -d -e
+
+# runtime environment
+./baw-list-export-configs.sh -c ../../../cp4ba-installations/configs25.0.1/env1-runtime-baw-bai-perf-test.properties -s -d -e
 ```
 
 ---
