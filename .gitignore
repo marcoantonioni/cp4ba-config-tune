@@ -1,0 +1,8 @@
+baw/output/*.yaml
+baw/output/*.yml
+baw/output/*.txt
+baw/output/*.log
+baw/export/*.xml
+scratchpad.txt
+
+
