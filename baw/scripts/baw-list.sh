@@ -10,6 +10,7 @@ _BAW_TMP_FOLDER=""
 _SHOW_SECRET_NAMES=false
 _DUMP_SECRET_VALUES=false
 _EXPORT_SECRET_VALUES=false
+_CP4BA_CR=""
 
 _LIBERTY_SECRET_ATTR_NAME="custom_xml_secret_name"
 _LOMBARDI_SECRET_ATTR_NAME="lombardi_custom_xml_secret_name"
@@ -141,64 +142,150 @@ onExit () {
 
 #------------------------
 
+listBAWsAuthoring () {
+  log_info "${_CLR_GREEN}List of BAW authoring names found in CR '${_CLR_YELLOW}${CP4BA_INST_CR_NAME}${_CLR_GREEN}'"
+  log_msg
+
+# bastudio_configuration
+#   custom_secret_name
+
+  if [[ "${_SHOW_SECRET_NAMES}" = "true" ]]; then
+
+    _BASTUDIO_CFG_CUST_SECRET_NAME=$(echo ${_CP4BA_CR} | jq '.spec.bastudio_configuration.custom_secret_name' | sed 's/"//g')
+    __WRKFLW_AUTHOR_CFG_LIBERTY_XML_SECRET_NAME=$(echo ${_CP4BA_CR} | jq '.spec.workflow_authoring_configuration.custom_xml_secret_name' | sed 's/"//g')
+    __WRKFLW_AUTHOR_CFG_LOMBARDI_XML_SECRET_NAME=$(echo ${_CP4BA_CR} | jq '.spec.workflow_authoring_configuration.lombardi_custom_xml_secret_name' | sed 's/"//g')
+
+    log_msg "${_CLR_GREEN}--BAStudio custom secret name '${_CLR_YELLOW}${_BASTUDIO_CFG_CUST_SECRET_NAME}${_CLR_GREEN}'"
+    log_msg "${_CLR_GREEN}--Liberty secret name '${_CLR_YELLOW}${__WRKFLW_AUTHOR_CFG_LIBERTY_XML_SECRET_NAME}${_CLR_GREEN}'"
+    log_msg "${_CLR_GREEN}--Lombardi secret name '${_CLR_YELLOW}${__WRKFLW_AUTHOR_CFG_LOMBARDI_XML_SECRET_NAME}${_CLR_GREEN}'"
+
+    if [[ "${_DUMP_SECRET_VALUES}" = "true" ]]; then
+      _BAS_CUSTOM_XML_CONTENT=""
+      _LIBERTY_XML_CONTENT=""
+      _LOMBARDI_XML_CONTENT=""
+
+      if [[ ! -z "${_BASTUDIO_CFG_CUST_SECRET_NAME}" && "${_BASTUDIO_CFG_CUST_SECRET_NAME}" != "null" ]]; then
+        _BAS_CUSTOM_XML_CONTENT=$(oc get secret -n ${CP4BA_INST_NAMESPACE} ${_BASTUDIO_CFG_CUST_SECRET_NAME} -o jsonpath='{.data.sensitiveCustomConfig}' | base64 -d)
+      fi
+
+      if [[ ! -z "${__WRKFLW_AUTHOR_CFG_LIBERTY_XML_SECRET_NAME}" && "${__WRKFLW_AUTHOR_CFG_LIBERTY_XML_SECRET_NAME}" != "null" ]]; then
+        _LIBERTY_XML_CONTENT=$(oc get secret -n ${CP4BA_INST_NAMESPACE} ${__WRKFLW_AUTHOR_CFG_LIBERTY_XML_SECRET_NAME} -o jsonpath='{.data.sensitiveCustomConfig}' | base64 -d)
+      fi
+
+      if [[ ! -z "${__WRKFLW_AUTHOR_CFG_LOMBARDI_XML_SECRET_NAME}" && "${__WRKFLW_AUTHOR_CFG_LOMBARDI_XML_SECRET_NAME}" != "null" ]]; then
+        _LOMBARDI_XML_CONTENT=$(oc get secret -n ${CP4BA_INST_NAMESPACE} ${__WRKFLW_AUTHOR_CFG_LOMBARDI_XML_SECRET_NAME} -o jsonpath='{.data.sensitiveCustomConfig}' | base64 -d)
+      fi
+
+      log_msg "${_CLR_GREEN}--BAStudio xml content:\n${_CLR_YELLOW}${_BAS_CUSTOM_XML_CONTENT}${_CLR_GREEN}"
+      log_msg "${_CLR_GREEN}--Liberty xml content:\n${_CLR_YELLOW}${_LIBERTY_XML_CONTENT}${_CLR_GREEN}"
+      log_msg "${_CLR_GREEN}--Lombardi xml content:\n${_CLR_YELLOW}${_LOMBARDI_XML_CONTENT}${_CLR_GREEN}"
+
+    fi
+
+    _BAW_NAME="bastudio"
+    if [[ "${_EXPORT_SECRET_VALUES}" = "true" ]]; then
+      if [[ ! -z "${_BASTUDIO_CFG_CUST_SECRET_NAME}" && "${_BASTUDIO_CFG_CUST_SECRET_NAME}" != "null" ]]; then
+        _OUT_FILE_SECRET_BASTUDIO="../export/secret-value-${CP4BA_INST_NAMESPACE}-${CP4BA_INST_CR_NAME}-${_BAW_NAME}-${_BASTUDIO_CFG_CUST_SECRET_NAME}.xml"
+        echo "${_BAS_CUSTOM_XML_CONTENT}" > "${_OUT_FILE_SECRET_BASTUDIO}"
+        log_msg "${_CLR_GREEN}--BAStudio xml content saved in '${_CLR_YELLOW}${_OUT_FILE_SECRET_LIBERTY}${_CLR_GREEN}'"
+      else
+        log_msg "${_CLR_GREEN}--BAStudio secret not defined."
+      fi
+
+      if [[ ! -z "${__WRKFLW_AUTHOR_CFG_LIBERTY_XML_SECRET_NAME}" && "${__WRKFLW_AUTHOR_CFG_LIBERTY_XML_SECRET_NAME}" != "null" ]]; then
+        _OUT_FILE_SECRET_LIBERTY="../export/secret-value-${CP4BA_INST_NAMESPACE}-${CP4BA_INST_CR_NAME}-${_BAW_NAME}-${__WRKFLW_AUTHOR_CFG_LIBERTY_XML_SECRET_NAME}.xml"
+        echo "${_LIBERTY_XML_CONTENT}" > "${_OUT_FILE_SECRET_LIBERTY}"
+        log_msg "${_CLR_GREEN}--Liberty xml content saved in '${_CLR_YELLOW}${_OUT_FILE_SECRET_LIBERTY}${_CLR_GREEN}'"
+      else
+        log_msg "${_CLR_GREEN}--Liberty secret not defined."
+      fi
+
+      if [[ ! -z "${__WRKFLW_AUTHOR_CFG_LOMBARDI_XML_SECRET_NAME}" && "${__WRKFLW_AUTHOR_CFG_LOMBARDI_XML_SECRET_NAME}" != "null" ]]; then
+        _OUT_FILE_SECRET_LOMBARDI="../export/secret-value-${CP4BA_INST_NAMESPACE}-${CP4BA_INST_CR_NAME}-${_BAW_NAME}-${__WRKFLW_AUTHOR_CFG_LOMBARDI_XML_SECRET_NAME}.xml"
+        echo "${_LOMBARDI_XML_CONTENT}" > "${_OUT_FILE_SECRET_LOMBARDI}"
+        log_msg "${_CLR_GREEN}--Lombardi xml content saved in '${_CLR_YELLOW}${_OUT_FILE_SECRET_LOMBARDI}${_CLR_GREEN}'"
+      else
+        log_msg "${_CLR_GREEN}--Lombardi secret not defined."
+      fi
+
+    fi      
+
+  fi
+  log_msg
+}
+listBAWsRuntimes () {
+  log_info "${_CLR_GREEN}List of BAW runtime names found in CR '${_CLR_YELLOW}${CP4BA_INST_CR_NAME}${_CLR_GREEN}'"
+  log_msg
+  _LIST_BAWS=$(echo ${_CP4BA_CR} | jq '.spec.baw_configuration[].name' | sed 's/"//g')
+
+  for _BAW_NAME in ${_LIST_BAWS}
+  do
+    log_msg "${_CLR_GREEN}BAW name '${_CLR_YELLOW}${_BAW_NAME}${_CLR_GREEN}'"
+    if [[ "${_SHOW_SECRET_NAMES}" = "true" ]]; then
+      _LIBERTY_SECRET_NAME=$(echo ${_CP4BA_CR} | jq '.spec.baw_configuration[] | select(.name=="'${_BAW_NAME}'") | ."'${_LIBERTY_SECRET_ATTR_NAME}'"' | sed 's/"//g')
+      _LOMBARDI_SECRET_NAME=$(echo ${_CP4BA_CR} | jq '.spec.baw_configuration[] | select(.name=="'${_BAW_NAME}'") | ."'${_LOMBARDI_SECRET_ATTR_NAME}'"' | sed 's/"//g')
+
+      log_msg "${_CLR_GREEN}--Liberty secret name '${_CLR_YELLOW}${_LIBERTY_SECRET_NAME}${_CLR_GREEN}'"
+      log_msg "${_CLR_GREEN}--Lombardi secret name '${_CLR_YELLOW}${_LOMBARDI_SECRET_NAME}${_CLR_GREEN}'"
+
+    fi
+
+    if [[ "${_DUMP_SECRET_VALUES}" = "true" ]]; then
+      _LIBERTY_XML_CONTENT=""
+      _LOMBARDI_XML_CONTENT=""
+
+      if [[ ! -z "${_LIBERTY_SECRET_NAME}" && "${_LIBERTY_SECRET_NAME}" != "null" ]]; then
+        _LIBERTY_XML_CONTENT=$(oc get secret -n ${CP4BA_INST_NAMESPACE} ${_LIBERTY_SECRET_NAME} -o jsonpath='{.data.sensitiveCustomConfig}' | base64 -d)
+      fi
+
+      if [[ ! -z "${_LOMBARDI_SECRET_NAME}" && "${_LOMBARDI_SECRET_NAME}" != "null" ]]; then
+        _LOMBARDI_XML_CONTENT=$(oc get secret -n ${CP4BA_INST_NAMESPACE} ${_LOMBARDI_SECRET_NAME} -o jsonpath='{.data.sensitiveCustomConfig}' | base64 -d)
+      fi
+
+      log_msg "${_CLR_GREEN}--Liberty xml content:\n${_CLR_YELLOW}${_LIBERTY_XML_CONTENT}${_CLR_GREEN}"
+      log_msg "${_CLR_GREEN}--Lombardi xml content:\n${_CLR_YELLOW}${_LOMBARDI_XML_CONTENT}${_CLR_GREEN}"
+
+    fi
+
+    if [[ "${_EXPORT_SECRET_VALUES}" = "true" ]]; then
+      if [[ ! -z "${_LIBERTY_SECRET_NAME}" && "${_LIBERTY_SECRET_NAME}" != "null" ]]; then
+        _OUT_FILE_SECRET_LIBERTY="../export/secret-value-${CP4BA_INST_NAMESPACE}-${CP4BA_INST_CR_NAME}-${_BAW_NAME}-${_LIBERTY_SECRET_NAME}.xml"
+        echo "${_LIBERTY_XML_CONTENT}" > "${_OUT_FILE_SECRET_LIBERTY}"
+        log_msg "${_CLR_GREEN}--Liberty xml content saved in '${_CLR_YELLOW}${_OUT_FILE_SECRET_LIBERTY}${_CLR_GREEN}'"
+      else
+        log_msg "${_CLR_GREEN}--Liberty secret not defined."
+      fi
+
+      if [[ ! -z "${_LOMBARDI_SECRET_NAME}" && "${_LOMBARDI_SECRET_NAME}" != "null" ]]; then
+        _OUT_FILE_SECRET_LOMBARDI="../export/secret-value-${CP4BA_INST_NAMESPACE}-${CP4BA_INST_CR_NAME}-${_BAW_NAME}-${_LOMBARDI_SECRET_NAME}.xml"
+        echo "${_LOMBARDI_XML_CONTENT}" > "${_OUT_FILE_SECRET_LOMBARDI}"
+        log_msg "${_CLR_GREEN}--Lombardi xml content saved in '${_CLR_YELLOW}${_OUT_FILE_SECRET_LOMBARDI}${_CLR_GREEN}'"
+      else
+        log_msg "${_CLR_GREEN}--Lombardi secret not defined."
+      fi
+
+    fi      
+
+  done
+  log_msg
+
+}
+
 listBAWs () {
   _CP4BA_CR=$(oc get icp4acluster -n ${CP4BA_INST_NAMESPACE} ${CP4BA_INST_CR_NAME} -o json)
   if [[ ! -z "${_CP4BA_CR}" && "${_CP4BA_CR}" != "null" ]]; then
-    log_info "${_CLR_GREEN}List of BAW names found in CR '${_CLR_YELLOW}${CP4BA_INST_CR_NAME}${_CLR_GREEN}'"
-    log_msg
-    _LIST_BAWS=$(echo ${_CP4BA_CR} | jq '.spec.baw_configuration[].name' | sed 's/"//g')
 
-    for _BAW_NAME in ${_LIST_BAWS}
-    do
-      log_msg "${_CLR_GREEN}BAW name '${_CLR_YELLOW}${_BAW_NAME}${_CLR_GREEN}'"
-      if [[ "${_SHOW_SECRET_NAMES}" = "true" ]]; then
-        _LIBERTY_SECRET_NAME=$(echo ${_CP4BA_CR} | jq '.spec.baw_configuration[] | select(.name=="'${_BAW_NAME}'") | ."'${_LIBERTY_SECRET_ATTR_NAME}'"' | sed 's/"//g')
-        _LOMBARDI_SECRET_NAME=$(echo ${_CP4BA_CR} | jq '.spec.baw_configuration[] | select(.name=="'${_BAW_NAME}'") | ."'${_LOMBARDI_SECRET_ATTR_NAME}'"' | sed 's/"//g')
-
-        log_msg "${_CLR_GREEN}  Liberty secret name '${_CLR_YELLOW}${_LIBERTY_SECRET_NAME}${_CLR_GREEN}'"
-        log_msg "${_CLR_GREEN}  Lombardi secret name '${_CLR_YELLOW}${_LOMBARDI_SECRET_NAME}${_CLR_GREEN}'"
-
+    if [[ "${CP4BA_INST_TYPE}" = "starter" ]]; then
+      listBAWsAuthoring
+    else
+      if [[ ${CP4BA_INST_OPT_COMPONENTS} == *"baw_authoring"* ]] || [[ ${CP4BA_INST_OPT_COMPONENTS} == *"wfps_authoring"* ]]; then
+        listBAWsAuthoring
+      else
+        # BAW runtime
+        listBAWsRuntimes
       fi
+    fi
 
-      if [[ "${_DUMP_SECRET_VALUES}" = "true" ]]; then
-        _LIBERTY_XML_CONTENT=""
-        _LOMBARDI_XML_CONTENT=""
-
-        if [[ ! -z "${_LIBERTY_SECRET_NAME}" && "${_LIBERTY_SECRET_NAME}" != "null" ]]; then
-          _LIBERTY_XML_CONTENT=$(oc get secret -n ${CP4BA_INST_NAMESPACE} ${_LIBERTY_SECRET_NAME} -o jsonpath='{.data.sensitiveCustomConfig}' | base64 -d)
-        fi
-
-        if [[ ! -z "${_LOMBARDI_SECRET_NAME}" && "${_LOMBARDI_SECRET_NAME}" != "null" ]]; then
-          _LOMBARDI_XML_CONTENT=$(oc get secret -n ${CP4BA_INST_NAMESPACE} ${_LOMBARDI_SECRET_NAME} -o jsonpath='{.data.sensitiveCustomConfig}' | base64 -d)
-        fi
-
-        log_msg "${_CLR_GREEN}  Liberty xml content:\n${_CLR_YELLOW}${_LIBERTY_XML_CONTENT}${_CLR_GREEN}"
-        log_msg "${_CLR_GREEN}  Lombardi xml content:\n${_CLR_YELLOW}${_LOMBARDI_XML_CONTENT}${_CLR_GREEN}"
-
-      fi
-
-      if [[ "${_EXPORT_SECRET_VALUES}" = "true" ]]; then
-        if [[ ! -z "${_LIBERTY_SECRET_NAME}" && "${_LIBERTY_SECRET_NAME}" != "null" ]]; then
-          _OUT_FILE_SECRET_LIBERTY="../export/secret-value-${CP4BA_INST_NAMESPACE}-${CP4BA_INST_CR_NAME}-${_BAW_NAME}-${_LIBERTY_SECRET_NAME}.xml"
-          echo "${_LIBERTY_XML_CONTENT}" > "${_OUT_FILE_SECRET_LIBERTY}"
-          log_msg "${_CLR_GREEN}  Liberty xml content saved in '${_CLR_YELLOW}${_OUT_FILE_SECRET_LIBERTY}${_CLR_GREEN}'"
-        else
-          log_msg "${_CLR_GREEN}  Liberty secret not defined."
-        fi
-
-        if [[ ! -z "${_LOMBARDI_SECRET_NAME}" && "${_LOMBARDI_SECRET_NAME}" != "null" ]]; then
-          _OUT_FILE_SECRET_LOMBARDI="../export/secret-value-${CP4BA_INST_NAMESPACE}-${CP4BA_INST_CR_NAME}-${_BAW_NAME}-${_LOMBARDI_SECRET_NAME}.xml"
-          echo "${_LOMBARDI_XML_CONTENT}" > "${_OUT_FILE_SECRET_LOMBARDI}"
-          log_msg "${_CLR_GREEN}  Lombardi xml content saved in '${_CLR_YELLOW}${_OUT_FILE_SECRET_LOMBARDI}${_CLR_GREEN}'"
-        else
-          log_msg "${_CLR_GREEN}  Lombardi secret not defined."
-        fi
-
-      fi      
-
-    done
-
-    log_msg
   fi
 }
 

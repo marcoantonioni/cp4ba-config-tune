@@ -29,6 +29,12 @@ Templates...
 
 ### Performance Tuning
 
+## Command examples
+
+```bash
+./baw-list.sh -c ../../../cp4ba-installations/configs25.0.1/env1-runtime-baw-bai-perf-test.properties -s -d -e
+```
+
 ---
 **DISCLAIMER**
 
