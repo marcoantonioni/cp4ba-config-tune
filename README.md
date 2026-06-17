@@ -40,6 +40,10 @@ Folder
 
 ### Configuration
 
+The Liberty and Lombardi 100Custom.xml server configurations are defined in the templates-custom-xml folder.
+The templates are valued based on environment variables defined in the properties files used to install the environment.
+You can create templates as desired by referencing the variables with the usual ${VAR_NAME} plateholder.
+
 ### Performance Tuning
 
 ## Command examples
