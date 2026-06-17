@@ -20,11 +20,10 @@ Please read the DISCLAIMER section carefully.
 
 ### BAStudio & BAW
 ```
-└── baw
-    ├── export
-    ├── output
-    ├── scripts
-    └── templates
+└───── export
+   ├── output
+   ├── scripts
+   └── templates-custom-xml
 ```
 
 #### Export folder
@@ -45,12 +44,22 @@ Folder
 
 ## Command examples
 
+Export configuration
 ```bash
 # authoring environment
-./baw-list-export-configs.sh -c ../../../cp4ba-installations/configs25.0.1/env1-authoring-baw-bai-onedb-int.properties -s -d -e
+./baw-list-export-configs.sh -c ../../../cp4ba-installations/configs25.0.1/env1-authoring-baw-bai.properties -s -d -e
 
 # runtime environment
-./baw-list-export-configs.sh -c ../../../cp4ba-installations/configs25.0.1/env1-runtime-baw-bai-perf-test.properties -s -d -e
+./baw-list-export-configs.sh -c ../../../cp4ba-installations/configs25.0.1/env1-runtime-baw-bai.properties -s -d -e
+```
+
+Set configuration
+```bash
+# authoring environment
+./baw-create-custom-xml-secrets.sh -c ../../../cp4ba-installations/configs25.0.1/env1-authoring-baw-bai.properties
+
+# runtime environment
+./baw-create-custom-xml-secrets.sh -c ../../../cp4ba-installations/configs25.0.1/env1-runtime-baw-bai.properties
 ```
 
 ---

@@ -34,7 +34,7 @@ _SCRIPT_PATH="$(readlink -f "${_SCRIPT_PATH}")"
 _SCRIPT_DIR="$(cd -P "$(dirname -- "${_SCRIPT_PATH}")" >/dev/null 2>&1 && pwd)"
 
 #----------------------------------------------------
-if [[ ! -f "$_SCRIPT_DIR/../../../cp4ba-logger/scripts/logger.sh" ]]; then
+if [[ ! -f "$_SCRIPT_DIR/../../cp4ba-logger/scripts/logger.sh" ]]; then
   echo "Error, log package not found !"
   echo "Clone it alongside with other cp4ba-..."
   echo "use the command: git clone https://github.com/marcoantonioni/cp4ba-logger"

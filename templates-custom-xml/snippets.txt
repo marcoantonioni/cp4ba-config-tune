@@ -1,0 +1,28 @@
+
+#--------------------------------------------
+
+Determine and fine-tune the MDB maxConcurrency parameter in IBM Cloud Pak for Business Automation (CP4BA) when using an external JMS configuration
+https://www.ibm.com/support/pages/node/7276075?myns=swgother&mynp=OCSSBYVB&mync=E&cm_sp=swgother-_-OCSSBYVB-_-E
+
+       <server>
+          <jmsActivationSpec id="jms/defEventQueueAs">
+            <properties.wasJms maxConcurrency="20"/>
+          </jmsActivationSpec>
+        </server>
+
+#--------------------------------------------
+
+#--------------------------------------------
+
+#--------------------------------------------
+
+#--------------------------------------------
+
+#--------------------------------------------
+
+#--------------------------------------------
+
+#--------------------------------------------
+
+#--------------------------------------------
+
