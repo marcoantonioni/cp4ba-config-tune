@@ -5,6 +5,7 @@
 _me=$(basename "$0")
 
 _CFG=""
+_PATCH_CR="false"
 _ERROR=0
 
 #--------------------------------------------------------
@@ -45,15 +46,16 @@ setTemporaryFolder () {
 
 #--------------------------------------------------------
 # read command line params
-while getopts c: flag
+while getopts c:p flag
 do
     case "${flag}" in
         c) _CFG=${OPTARG};;
+        p) _PATCH_CR="true";;        
     esac
 done
 
 if [[ -z "${_CFG}" ]]; then
-  echo "usage: $_me -c path-of-config-file"
+  echo "usage: $_me -c path-of-config-file -p (optional)patch-cr"
   exit
 fi
 
@@ -163,8 +165,10 @@ createLombardiXMLSecret () {
   if [[ -f "${_FULL_PATH}" ]]; then
 
     #---------------------------------------------
-    _AGENT_FQDN_BASE=$(oc cluster-info | sed 's/.*https:\/\/api.//g' | sed 's/:.*//g' | head -n1)
-    _AGENT_FQDN_FULL="https://${CP4BA_INST_CPD_CONSOLE_PREFIX}.${_AGENT_FQDN_BASE}"
+    # dynamic values, use following vars in your template
+    export _AGENT_FQDN_BASE=$(oc cluster-info | sed 's/.*https:\/\/api.//g' | sed 's/:.*//g' | head -n1)
+    export _AGENT_FQDN_FULL="https://${CP4BA_INST_CPD_CONSOLE_PREFIX}.${_AGENT_FQDN_BASE}"
+
 
     _SECRET_FILE_NAME="${_INST_TMP_FOLDER}/secret-100Custom-runtime-$USER-$RANDOM.xml"
 
@@ -213,9 +217,30 @@ createCustomXMLSecrets () {
 
 }
 
+patchCR () {
+
+  if [[ ${CP4BA_INST_OPT_COMPONENTS} == *"baw_authoring"* ]] || [[ ${CP4BA_INST_OPT_COMPONENTS} == *"wfps_authoring"* ]]; then
+    log_info "${_CLR_GREEN}Patching authoring ICP4ACluster '${_CLR_YELLOW}${CP4BA_INST_CR_NAME}${_CLR_GREEN}' in namespace '${_CLR_YELLOW}${CP4BA_INST_NAMESPACE}${_CLR_GREEN}'"
+
+    oc patch ICP4ACluster ${CP4BA_INST_CR_NAME} -n ${CP4BA_INST_NAMESPACE} --type=json -p '[{ "op": "replace", "path": "/spec/workflow_authoring_configuration/custom_xml_secret_name", "value": '${CP4BA_INST_LIBERTY_CUSTOM_XML_SECRET_NAME}' }]' 2>/dev/null 1>/dev/null
+
+    oc patch ICP4ACluster ${CP4BA_INST_CR_NAME} -n ${CP4BA_INST_NAMESPACE} --type=json -p '[{ "op": "replace", "path": "/spec/workflow_authoring_configuration/lombardi_custom_xml_secret_name", "value": '${CP4BA_INST_LOMBARDI_CUSTOM_XML_SECRET_NAME}' }]' 2>/dev/null 1>/dev/null
+
+  else
+    log_info "${_CLR_GREEN}Patching runtime ICP4ACluster '${_CLR_YELLOW}${CP4BA_INST_CR_NAME}${_CLR_GREEN}' in namespace '${_CLR_YELLOW}${CP4BA_INST_NAMESPACE}${_CLR_GREEN}'"
+
+    _SECTION_NAME="baw_configuration"
+    echo "Patch CR RUNTIME not yet implemented"
+  fi
+
+}
+
 log_msg "=============================================================="
 log_info "${_CLR_GREEN}Creating custom xml secrets in '${_CLR_YELLOW}${CP4BA_INST_NAMESPACE}${_CLR_GREEN}' namespace${_CLR_NC}"
 
 setTemporaryFolder
 
 createCustomXMLSecrets
+if [[ "${_PATCH_CR}" = "true" ]]; then
+  patchCR
+fi

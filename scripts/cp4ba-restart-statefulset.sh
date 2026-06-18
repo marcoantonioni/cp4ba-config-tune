@@ -229,7 +229,13 @@ restartStatefulset () {
 log_msg "==============================================================${_CLR_NC}"
 
 if [[ "${_SRVTYPE}" = "baw" ]]; then
-  _SRV_SUFFIX="baw-server"
+  if [[ ${CP4BA_INST_OPT_COMPONENTS} == *"baw_authoring"* ]] || [[ ${CP4BA_INST_OPT_COMPONENTS} == *"wfps_authoring"* ]]; then
+    _SRVNAME="bastudio"
+    _SRV_SUFFIX="deployment"
+  else
+    _SRV_SUFFIX="baw-server"
+  fi
+
   _SFS_NAME="${CP4BA_INST_CR_NAME}-${_SRVNAME}-${_SRV_SUFFIX}"
   log_info "${_CLR_GREEN}Restarting pods for BAW statefulset '${_CLR_YELLOW}${_SFS_NAME}${_CLR_GREEN}' in namespace '${_CLR_YELLOW}${_TNS}${_CLR_GREEN}'${_CLR_NC}"
   restartStatefulset "${_TNS}" "${_SFS_NAME}" "${_SRVTYPE}"
