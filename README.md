@@ -77,6 +77,42 @@ Restart pods of Statefulset
 ./cp4ba-restart-statefulset.sh -c ../../../cp4ba-installations/configs25.0.1/env1-runtime-wfps.properties -t wfps -s wfps-demo-1 -w
 ```
 
+# References
+
+## Configuration and Tuning
+
+Don't use 'liberty_custom_xml' tag with this tools.
+
+https://www.ibm.com/docs/en/cloud-paks/cp-biz-automation/25.0.1?topic=automation-customizing
+
+https://www.ibm.com/docs/en/cloud-paks/cp-biz-automation/25.0.1?topic=customizing-business-automation-workflow-properties
+
+https://community.ibm.com/community/user/blogs/frank-lu/2026/03/23/cp4ba-2500-tuning-recommendations-for-large-worklo
+
+https://opensource.com/article/21/7/parse-xml-linux
+
+https://www.ibm.com/docs/en/cloud-paks/cp-biz-automation/25.0.1?topic=customizing-100customxml-file-configuration
+
+https://www.ibm.com/docs/en/cloud-paks/cp-biz-automation/25.0.1?topic=studio-optional-customizing-business-automation-properties
+
+https://www.ibm.com/docs/en/cloud-paks/cp-biz-automation/25.0.1?topic=deployment-customizing-workflow-process-service-runtime#tsk_customize_wfps__liberty
+
+https://www.ibm.com/docs/en/cloud-paks/cp-biz-automation/25.0.1?topic=configuration-deploying-100customxml-file-deployment-environment
+
+https://www.ibm.com/docs/en/baw/25.0.x?topic=parameters-runtime
+
+https://www.ibm.com/docs/en/cloud-paks/cp-biz-automation/25.0.1?topic=configuration-modifying-individual-properties
+
+https://www.ibm.com/docs/en/cloud-paks/cp-biz-automation/25.0.1?topic=properties-limiting-number-rest-calls-server
+
+https://www.ibm.com/docs/en/cloud-paks/cp-biz-automation/25.0.1?topic=properties-adjusting-rest-timeout-length
+
+https://www.ibm.com/docs/en/cloud-paks/foundational-services/4.x_cd?topic=options-configuring-foundational-services
+
+
+https://github.com/icp4a/workflow-performance/blob/main/container.md
+
+
 ---
 **DISCLAIMER**
 

@@ -77,9 +77,6 @@ https://www.ibm.com/support/pages/node/7276075?myns=swgother&mynp=OCSSBYVB&mync=
 #--------------------------------------------
 <properties>
   <server merge="mergeChildren">
-    <document-attachment-max-file-size-upload merge="replace">150000</document-attachment-max-file-size-upload>
-    <case-instance-migration-enabled>true</case-instance-migration-enabled>
-
     <driver merge="mergeChildren">
         <connection-timeout merge="replace">123</connection-timeout>
     </driver>
