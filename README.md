@@ -71,10 +71,10 @@ Set configuration
 Restart pods of Statefulset
 ```bash
 # runtime environment BAW
-./baw-restart-statefulset.sh -c ../../../cp4ba-installations/configs25.0.1/env1-runtime-baw-bai.properties -t baw -s baw1 -w
+./cp4ba-restart-statefulset.sh -c ../../../cp4ba-installations/configs25.0.1/env1-runtime-baw-bai.properties -t baw -s baw1 -w
 
 # runtime environment WFPS
-./baw-restart-statefulset.sh -c ../../../cp4ba-installations/configs25.0.1/env1-runtime-wfps.properties -t wfps -s wfps-demo-1 -w
+./cp4ba-restart-statefulset.sh -c ../../../cp4ba-installations/configs25.0.1/env1-runtime-wfps.properties -t wfps -s wfps-demo-1 -w
 ```
 
 ---
