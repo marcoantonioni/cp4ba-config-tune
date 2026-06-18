@@ -132,10 +132,18 @@ resourceExist () {
   return 1
 }
 
-# CONFIG_FILE=/home/$USER/cp4ba-projects/cp4ba-installations/configs25.0.1/env1-runtime-baw-bai.properties
-# ./baw-restart-statefulset.sh -c $CONFIG_FILE
+waitReadyPod () {
+  _NS="$1"
+  _POD_NAME="$2"
+  _SFS_NAME="$3"
 
-# oc get statefulsets -n "$_NS" ${CP4BA_INST_CR_NAME}-${CP4BA_INST_BAW_1_NAME}-baw-server
+  _CONDITION_MET=$(oc wait --for=condition=Ready -n $_NS pod/${_POD_NAME} --timeout=300s | grep "condition met" | wc -l)
+  if [[ $_CONDITION_MET -eq 0 ]]; then
+    log_warning "Wait timeout reached, pod '${_CLR_YELLOW}${_POD_NAME}${_CLR_GREEN}' not ready for statefulset '${_CLR_YELLOW}${_SFS_NAME}${_CLR_GREEN}'"
+    oc get pod -n ${_NS} "${_POD_NAME}"
+  fi
+  return $_CONDITION_MET
+}
 
 restartForce () {
   _NS="$1"
@@ -161,7 +169,12 @@ restartForce () {
         break
       fi
     done
+
     log_msg ""
+    log_info "Waiting '${_active_pods}' new pods to reach Ready status for statefulset '${_CLR_YELLOW}${_SFS_NAME}${_CLR_GREEN}'"
+    LIST_OF_PODS=$(oc get pods -n "$_NS" | grep ${_SFS_NAME} | awk '{print $1}')
+    echo "$LIST_OF_PODS" | while IFS= read -r pod_name ; do waitReadyPod "${_NS}" "${pod_name}" "${_SFS_NAME}"; done
+
     log_info "Now '${_active_pods}' new pods are running for statefulset '${_CLR_YELLOW}${_SFS_NAME}${_CLR_GREEN}'"
   else
     log_info "Running in no wait mode"
@@ -173,24 +186,33 @@ restartForce () {
 deletePodAndWaitRunningReady () {
   _NS="$1"
   _POD_NAME="$2"
+  _SFS_NAME="$3"
 
   log_info "Gracefully restart pod '${_CLR_YELLOW}${_POD_NAME}${_CLR_GREEN}' in namespace '${_CLR_YELLOW}${_NS}${_CLR_GREEN}'"
 
-  oc delete pod -n "$_NS" "${_POD_NAME}" 2>/dev/null 1>/dev/null
-  sleep 3
-  _active_pods=0
-  _counter=0
-  _CONDITION_MET=0
-  while [ $_CONDITION_MET -lt 1 ]; do
-    _CONDITION_MET=$(oc wait --for=condition=Ready -n $_NS pod/${_POD_NAME} --timeout=300s | grep "condition met" | wc -l)
-    sleep 5
-    _counter=$((_counter + 1))
-    if [[ $_counter -gt 300 ]]; then
-      log_warning "Wait timeout reached, pod '${_CLR_YELLOW}${_POD_NAME}${_CLR_GREEN}' not ready for statefulset '${_CLR_YELLOW}${_SFS_NAME}${_CLR_GREEN}'"
-      oc get pod -n ${_NS} "${_POD_NAME}"
-      break
-    fi
-  done
+  _PENDING=$(oc get pod -n $_NS ${_POD_NAME} | grep "Pending" | wc -l)
+  if [[ $_PENDING -eq 0 ]]; then
+    oc delete pod -n "$_NS" "${_POD_NAME}" 2>/dev/null 1>/dev/null
+    sleep 3
+
+    waitReadyPod ${_NS} ${_POD_NAME} ${_SFS_NAME}
+
+    #_active_pods=0
+    #_counter=0
+    #_CONDITION_MET=0
+    #while [ $_CONDITION_MET -lt 1 ]; do
+    #  _CONDITION_MET=$(oc wait --for=condition=Ready -n $_NS pod/${_POD_NAME} --timeout=300s | grep "condition met" | wc -l)
+    #  sleep 5
+    #  _counter=$((_counter + 1))
+    #  if [[ $_counter -gt 300 ]]; then
+    #    log_warning "Wait timeout reached, pod '${_CLR_YELLOW}${_POD_NAME}${_CLR_GREEN}' not ready for statefulset '${_CLR_YELLOW}${_SFS_NAME}${_CLR_GREEN}'"
+    #    oc get pod -n ${_NS} "${_POD_NAME}"
+    #    break
+    #  fi
+    #done
+  else
+    log_info "Skip pending pod '${_CLR_YELLOW}${_POD_NAME}${_CLR_GREEN}' in namespace '${_CLR_YELLOW}${_NS}${_CLR_GREEN}'"
+  fi
 }
 
 restartGraceful () {
@@ -201,7 +223,7 @@ restartGraceful () {
   log_info "Statefulset '${_CLR_YELLOW}${_SFS_NAME}${_CLR_GREEN}' replicas '${_CLR_YELLOW}$_ORIG_REPLICAS${_CLR_GREEN}', deleting pods in graceful mode"
 
   LIST_OF_PODS=$(oc get pods -n "$_NS" | grep ${_SFS_NAME} | awk '{print $1}')
-  echo "$LIST_OF_PODS" | while IFS= read -r pod_name ; do deletePodAndWaitRunningReady "${_NS}" "${pod_name}"; done
+  echo "$LIST_OF_PODS" | while IFS= read -r pod_name ; do deletePodAndWaitRunningReady "${_NS}" "${pod_name}" "${_SFS_NAME}"; done
 }
 
 restartStatefulset () {
