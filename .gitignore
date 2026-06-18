@@ -1,8 +1,8 @@
-baw/output/*.yaml
-baw/output/*.yml
-baw/output/*.txt
-baw/output/*.log
-baw/export/*.xml
+output/*.yaml
+output/*.yml
+output/*.txt
+output/*.log
+export/*.xml
 scratchpad.txt
 
 
