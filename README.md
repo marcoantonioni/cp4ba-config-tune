@@ -53,19 +53,28 @@ TBD
 Export configuration
 ```bash
 # authoring environment
-./baw-list-export-configs.sh -c ../../../cp4ba-installations/configs25.0.1/env1-authoring-baw-bai.properties -s -d -e
+./cp4ba-list-export-configs.sh -c ../../../cp4ba-installations/configs25.0.1/env1-authoring-baw-bai.properties -s -d -e
 
 # runtime environment
-./baw-list-export-configs.sh -c ../../../cp4ba-installations/configs25.0.1/env1-runtime-baw-bai.properties -s -d -e
+./cp4ba-list-export-configs.sh -c ../../../cp4ba-installations/configs25.0.1/env1-runtime-baw-bai.properties -s -d -e
 ```
 
 Set configuration
 ```bash
 # authoring environment
-./baw-create-custom-xml-secrets.sh -c ../../../cp4ba-installations/configs25.0.1/env1-authoring-baw-bai.properties
+./cp4ba-create-custom-xml-secrets.sh -c ../../../cp4ba-installations/configs25.0.1/env1-authoring-baw-bai.properties
 
 # runtime environment
-./baw-create-custom-xml-secrets.sh -c ../../../cp4ba-installations/configs25.0.1/env1-runtime-baw-bai.properties
+./cp4ba-create-custom-xml-secrets.sh -c ../../../cp4ba-installations/configs25.0.1/env1-runtime-baw-bai.properties
+```
+
+Restart pods of Statefulset
+```bash
+# runtime environment BAW
+./baw-restart-statefulset.sh -c ../../../cp4ba-installations/configs25.0.1/env1-runtime-baw-bai.properties -t baw -s baw1 -w
+
+# runtime environment WFPS
+./baw-restart-statefulset.sh -c ../../../cp4ba-installations/configs25.0.1/env1-runtime-wfps.properties -t wfps -s wfps-demo-1 -w
 ```
 
 ---

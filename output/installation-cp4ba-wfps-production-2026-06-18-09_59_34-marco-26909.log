@@ -1,0 +1,3 @@
+==============================================================
+[2026-06-18T09:59:34+0200] [INFO] Restarting pods for WFPS statefulset 'wfps-demo-1-wfps-runtime-server' in namespace 'cp4ba-wfps-production'
+[2026-06-18T09:59:34+0200] [ERROR] Unknown statefulset 'icp4adeploy-wfps-demo-1-wfps-runtime-server' in namespace 'cp4ba-wfps-production'

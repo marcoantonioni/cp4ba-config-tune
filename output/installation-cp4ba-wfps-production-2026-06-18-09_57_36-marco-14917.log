@@ -1,0 +1,3 @@
+==============================================================
+[2026-06-18T09:57:36+0200] [INFO] Restarting pods for WFPS statefulset 'wfps-demo-1-wfps-runtime-server' in namespace 'cp4ba-wfps-production'
+Not yet implemented

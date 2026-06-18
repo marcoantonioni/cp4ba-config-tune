@@ -1,28 +1,134 @@
+#===================================================
+# LIBERTY
+#===================================================
 
 #--------------------------------------------
-
 Determine and fine-tune the MDB maxConcurrency parameter in IBM Cloud Pak for Business Automation (CP4BA) when using an external JMS configuration
 https://www.ibm.com/support/pages/node/7276075?myns=swgother&mynp=OCSSBYVB&mync=E&cm_sp=swgother-_-OCSSBYVB-_-E
 
-       <server>
-          <jmsActivationSpec id="jms/defEventQueueAs">
-            <properties.wasJms maxConcurrency="20"/>
-          </jmsActivationSpec>
-        </server>
+<server>
+  <jmsActivationSpec id="jms/defEventQueueAs">
+    <properties.wasJms maxConcurrency="20"/>
+  </jmsActivationSpec>
+</server>
 
 #--------------------------------------------
+<server>
+  <!-- JVM EXAMPLE -->
+  <jvmOptions>
+    <option>-Duser.timezone=UTC</option>
+    <option>-Djava.net.preferIPv4Stack=true</option>
+  </jvmOptions>
+</server>
 
 #--------------------------------------------
+<server>
+  <!-- PROXY EXAMPLE, add in jvmOptions section -->
+  <jvmOptions>
+    <option>-Dhttp.proxyHost=10.20.30.40</option>
+    <option>-Dhttp.proxyPort=1234</option>
+    <option>-Dhttp.nonProxyHosts=localhost|127.0.0.1|*.svc</option>
+    <option>-Djava.net.useSystemProxies=true</option>
+  </jvmOptions>
+
+</server>
 
 #--------------------------------------------
+<server>
+  <!-- TRACE EXAMPLE -->
+  <logging traceSpecification="*=info:com.ibm.bpm.engine.*=all:com.ibm.ws.rs.pool.*=all" />
+  <logging consoleLogLevel="INFO" traceSpecification="*=info"/>
+</server>
 
 #--------------------------------------------
+<server>
+  <!-- CUSTOM DB EXAMPLE -->
+  <dataSource commitOrRollbackOnCleanup="commit" id="jdbc/mydb" isolationLevel="TRANSACTION_READ_COMMITTED" jndiName="jdbc/mydb" type="javax.sql.XADataSource">
+    <jdbcDriver libraryRef="PostgreSQLLib"/>
+    <connectionManager maxPoolSize="51" minPoolSize="21"/>
+      <properties.postgresql URL="jdbc:postgresql://my-postgres-1-for-cp4ba-rw.cp4ba-baw-bai-prod-perf-test.svc.cluster.local:5432/mydb" user="myuser" password="dem0s"/>
+  </dataSource>
+</server>
+
 
 #--------------------------------------------
+<server>
+</server>
+
 
 #--------------------------------------------
+<server>
+</server>
+
 
 #--------------------------------------------
+<server>
+</server>
+
 
 #--------------------------------------------
+<server>
+</server>
+
+#===================================================
+# LOMBARDI
+#===================================================
+
+#--------------------------------------------
+<properties>
+  <server merge="mergeChildren">
+    <document-attachment-max-file-size-upload merge="replace">150000</document-attachment-max-file-size-upload>
+    <case-instance-migration-enabled>true</case-instance-migration-enabled>
+
+    <driver merge="mergeChildren">
+        <connection-timeout merge="replace">123</connection-timeout>
+    </driver>
+  </server>
+</properties>
+
+#--------------------------------------------
+<properties>
+</properties>
+
+
+#--------------------------------------------
+<properties>
+</properties>
+
+
+#--------------------------------------------
+<properties>
+</properties>
+
+
+#--------------------------------------------
+<properties>
+</properties>
+
+
+#--------------------------------------------
+<properties>
+</properties>
+
+
+#--------------------------------------------
+<properties>
+</properties>
+
+
+
+
+#===================================================
+# Verify configuration files in file system pod
+#===================================================
+
+ls -al /opt/ibm/wlp/usr/shared/resources/sensitive-custom/sensitiveCustom.xml
+
+ls -al /opt/ibm/wlp/usr/servers/defaultServer/config/
+cat /opt/ibm/wlp/usr/servers/defaultServer/config/199Custom.xml
+
+ls -al /opt/ibm/wlp/usr/servers/defaultServer/TeamWorksConfiguration.running.xml
+
+grep "150000" /opt/ibm/wlp/usr/servers/defaultServer/TeamWorksConfiguration.running.xml
+grep "123" /opt/ibm/wlp/usr/servers/defaultServer/TeamWorksConfiguration.running.xml
 
