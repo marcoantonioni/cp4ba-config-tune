@@ -1,0 +1,7 @@
+<properties>
+  <server merge="mergeChildren">
+
+    <case-instance-migration-enabled>true</case-instance-migration-enabled>
+
+  </server>
+</properties>

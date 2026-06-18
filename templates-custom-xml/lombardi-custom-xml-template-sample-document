@@ -1,19 +1,5 @@
 <properties>
   <server merge="mergeChildren">
-    <email merge="mergeChildren">
-      <!-- SMTP server that mail should be sent to -->
-      <smtp-server merge="replace">mail.cp4ba-collateral.svc.cluster.local</smtp-server>
-        <mail-template>
-          <process>externalmailprocesslink_{0}.html</process>
-          <no-process>externalmailnoprocess_{0}.html</no-process> 
-        </mail-template> 
-      <valid-from-required merge="replace">true</valid-from-required>
-      <default-from-address merge="replace">system@cp.internal</default-from-address>
-      <send-external-email merge="replace">true</send-external-email>
-      <send-email-notifications-to-list merge="replace">false</send-email-notifications-to-list>
-      <send-email-notifications-async merge="replace">false</send-email-notifications-async>
-      <send-on-reassignment merge="replace">true</send-on-reassignment>
-    </email>
     <!-- mime type white list which specifies mime types accepted for -->
     <!-- upload to document list or document attachment -->
     <document-attachment-accepted-mime-types merge="mergeChildren">
@@ -44,6 +30,7 @@
         <mime-type>application/zip</mime-type>
         <mime-type>message/rfc822</mime-type>
     </document-attachment-accepted-mime-types>
+
     <!-- extension white list which specifies extensions accepted for -->
     <!-- upload to document list or document attachment -->
     <document-attachment-accepted-extensions merge="mergeChildren">
@@ -77,24 +64,8 @@
         <extension>zip</extension>
         <extension>eml</extension>
     </document-attachment-accepted-extensions>
+
     <document-attachment-max-file-size-upload merge="replace">5000048576</document-attachment-max-file-size-upload>
-    <case-instance-migration-enabled>true</case-instance-migration-enabled>
-    <gen-ai merge="mergeChildren"> 
-      <project-id>project_id</project-id> 
-      <provider-url>${CP4BA_INST_BAS_GENAI_WX_URL_PROVIDER}</provider-url> 
-      <auth-alias>watsonx.ai_auth_alias</auth-alias> 
-      <read-timeout>120</read-timeout>
-      <default-foundation-model>meta-llama/llama-3-3-70b-instruct</default-foundation-model>
-    </gen-ai>
-    <portal merge="mergeChildren">
-      <agent-enable merge="replace">true</agent-enable>
-      <agent-endpoint merge="replace">${_AGENT_FQDN_FULL}/agent/runtimeChat</agent-endpoint>
-    </portal>
-    <wxo merge="mergeChildren">
-      <token-url>${CP4BA_INST_WXO_TOKEN_URL}</token-url> 
-      <discovery>
-        <service-instance-url>${CP4BA_INST_WXO_SERVICE_INSTANCE_URL}</service-instance-url> 
-      </discovery>
-    </wxo>
+    
   </server>
 </properties>

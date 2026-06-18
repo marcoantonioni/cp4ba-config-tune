@@ -11,8 +11,5 @@
         <properties.postgresql URL="jdbc:postgresql://${CP4BA_INST_DB_CUSTOMDB_SERVER}:${CP4BA_INST_DB_SERVER_PORT}/${CP4BA_INST_DB_CUSTOMDB_NAME}" user="${CP4BA_INST_DB_CUSTOMDB_USER}" password="${CP4BA_INST_DB_CUSTOMDB_PWD}"/>
     </dataSource>
 
-    <!-- AI Features START -->
-    <authData id="watsonx.ai_auth_alias" user="${CP4BA_INST_GENAI_WX_USERID}" password="${CP4BA_INST_GENAI_WX_APIKEY}" />
-    <!-- AI Features END -->
   </server>
 </properties>

@@ -1,0 +1,18 @@
+<properties>
+  <server merge="mergeChildren">
+    <email merge="mergeChildren">
+      <!-- SMTP server that mail should be sent to -->
+      <smtp-server merge="replace">mail.cp4ba-collateral.svc.cluster.local</smtp-server>
+        <mail-template>
+          <process>externalmailprocesslink_{0}.html</process>
+          <no-process>externalmailnoprocess_{0}.html</no-process> 
+        </mail-template> 
+      <valid-from-required merge="replace">true</valid-from-required>
+      <default-from-address merge="replace">system@cp.internal</default-from-address>
+      <send-external-email merge="replace">true</send-external-email>
+      <send-email-notifications-to-list merge="replace">false</send-email-notifications-to-list>
+      <send-email-notifications-async merge="replace">false</send-email-notifications-async>
+      <send-on-reassignment merge="replace">true</send-on-reassignment>
+    </email>
+  </server>
+</properties>
