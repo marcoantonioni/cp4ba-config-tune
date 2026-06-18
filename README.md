@@ -70,6 +70,10 @@ Set configuration
 
 Restart pods of Statefulset
 ```bash
+
+# authoring environment
+./cp4ba-restart-statefulset.sh -c ../../cp4ba-installations/configs25.0.1/env1-authoring-baw-bai.properties -t baw -s bas -w
+
 # runtime environment BAW, graceful restart
 ./cp4ba-restart-statefulset.sh -c ../../cp4ba-installations/configs25.0.1/env1-runtime-baw-bai.properties -t baw -s baw1 -w
 
