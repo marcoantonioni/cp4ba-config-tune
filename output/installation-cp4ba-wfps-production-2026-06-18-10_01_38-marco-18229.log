@@ -1,4 +1,0 @@
-==============================================================
-[2026-06-18T10:01:38+0200] [INFO] Restarting pods for WFPS statefulset 'wfps-demo-1-wfps-runtime-server' in namespace 'cp4ba-wfps-production'
-[2026-06-18T10:01:40+0200] [INFO] Statefulset 'wfps-demo-1-wfps-runtime-server' replicas '2', deleting pods in graceful mode
-[2026-06-18T10:01:41+0200] [INFO] Gracefully restart pod '' in namespace 'cp4ba-wfps-production'

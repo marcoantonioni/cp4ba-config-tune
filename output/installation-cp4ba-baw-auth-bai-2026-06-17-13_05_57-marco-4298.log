@@ -1,5 +1,0 @@
-==============================================================
-[2026-06-17T13:05:57+0200] [INFO] Creating custom xml secrets in 'cp4ba-baw-auth-bai' namespace
-[2026-06-17T13:05:57+0200] [INFO] Running with temporary folder '/tmp'
-[2026-06-17T13:05:57+0200] [ERROR] File not found '/home/marco/cp4ba-projects/cp4ba-config-tune/scripts/templates-custom-xml/liberty-custom-xml-template'
-[2026-06-17T13:05:57+0200] [ERROR] File not found '/home/marco/cp4ba-projects/cp4ba-config-tune/scripts/templates-custom-xml/lombardi-custom-xml-template'

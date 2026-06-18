@@ -1,3 +1,0 @@
-==============================================================
-[2026-06-18T06:53:16+0200] [INFO] Restarting pods for BAW statefulset 'icp4adeploy-baw1-baw-server' in namespace 'cp4ba-baw-bai-production'
-[2026-06-18T06:53:22+0200] [INFO] Running in no wait mode
