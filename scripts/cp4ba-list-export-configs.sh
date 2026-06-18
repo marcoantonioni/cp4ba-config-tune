@@ -213,6 +213,7 @@ listBAWsAuthoring () {
   fi
   log_msg
 }
+
 listBAWsRuntimes () {
   log_info "${_CLR_GREEN}List of BAW runtime names found in CR '${_CLR_YELLOW}${CP4BA_INST_CR_NAME}${_CLR_GREEN}'"
   log_msg
