@@ -6,6 +6,7 @@ _me=$(basename "$0")
 
 _CFG=""
 _PATCH_CR="false"
+_SRV_NAME=""
 _ERROR=0
 
 #--------------------------------------------------------
@@ -46,16 +47,17 @@ setTemporaryFolder () {
 
 #--------------------------------------------------------
 # read command line params
-while getopts c:p flag
+while getopts c:s:p flag
 do
     case "${flag}" in
         c) _CFG=${OPTARG};;
-        p) _PATCH_CR="true";;        
+        p) _PATCH_CR="true";;    
+        s) _SRV_NAME=${OPTARG};;
     esac
 done
 
 if [[ -z "${_CFG}" ]]; then
-  echo "usage: $_me -c path-of-config-file -p (optional)patch-cr"
+  echo "usage: $_me -c path-of-config-file -p (optional)patch-cr -s (requested if -p)server-name"
   exit
 fi
 
@@ -227,10 +229,32 @@ patchCR () {
     oc patch ICP4ACluster ${CP4BA_INST_CR_NAME} -n ${CP4BA_INST_NAMESPACE} --type=json -p '[{ "op": "replace", "path": "/spec/workflow_authoring_configuration/lombardi_custom_xml_secret_name", "value": '${CP4BA_INST_LOMBARDI_CUSTOM_XML_SECRET_NAME}' }]' 2>/dev/null 1>/dev/null
 
   else
-    log_info "${_CLR_GREEN}Patching runtime ICP4ACluster '${_CLR_YELLOW}${CP4BA_INST_CR_NAME}${_CLR_GREEN}' in namespace '${_CLR_YELLOW}${CP4BA_INST_NAMESPACE}${_CLR_GREEN}'"
+    log_info "${_CLR_GREEN}Patching runtime server '${_CLR_YELLOW}${_SRV_NAME}${_CLR_GREEN}' for ICP4ACluster '${_CLR_YELLOW}${CP4BA_INST_CR_NAME}${_CLR_GREEN}' in namespace '${_CLR_YELLOW}${CP4BA_INST_NAMESPACE}${_CLR_GREEN}'"
 
-    _SECTION_NAME="baw_configuration"
-    echo "Patch CR RUNTIME not yet implemented"
+    if [[ ! -z "${_SRV_NAME}" ]]; then
+      INDEX=$(oc get ICP4ACluster ${CP4BA_INST_CR_NAME} -n ${CP4BA_INST_NAMESPACE} -o json | \
+        jq '.spec.baw_configuration | to_entries[] | select(.value.name == "'${_SRV_NAME}'") | .key')
+
+      if [[ ! -z "${INDEX}" ]]; then
+        oc patch ICP4ACluster icp4adeploy -n cp4ba-baw-bai-production --type='json' -p "[
+          {
+            \"op\": \"replace\",
+            \"path\": \"/spec/baw_configuration/${INDEX}/custom_xml_secret_name\",
+            \"value\": \"${CP4BA_INST_LIBERTY_CUSTOM_XML_SECRET_NAME}\"
+          }
+        ]" 2>/dev/null 1>/dev/null
+        oc patch ICP4ACluster icp4adeploy -n cp4ba-baw-bai-production --type='json' -p "[
+          {
+            \"op\": \"replace\",
+            \"path\": \"/spec/baw_configuration/${INDEX}/lombardi_custom_xml_secret_name\",
+            \"value\": \"${CP4BA_INST_LOMBARDI_CUSTOM_XML_SECRET_NAME}\"
+          }
+        ]" 2>/dev/null 1>/dev/null
+      else
+        log_error "Server name '${_SRV_NAME}' not found."
+      fi
+    fi
+
   fi
 
 }

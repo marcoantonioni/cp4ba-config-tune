@@ -66,6 +66,9 @@ Set configuration
 
 # runtime environment
 ./cp4ba-create-custom-xml-secrets.sh -c ../../cp4ba-installations/configs25.0.1/env1-runtime-baw-bai.properties
+
+./cp4ba-create-custom-xml-secrets.sh -c ../../cp4ba-installations/configs25.0.1/env1-runtime-baw-bai.properties -p -s baw1
+
 ```
 
 Restart pods of Statefulset
