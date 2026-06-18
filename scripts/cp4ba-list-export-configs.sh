@@ -40,7 +40,7 @@ if [[ ! -f "$_SCRIPT_DIR/../../cp4ba-logger/scripts/logger.sh" ]]; then
   echo "use the command: git clone https://github.com/marcoantonioni/cp4ba-logger"
   exit 1
 fi
-source $_SCRIPT_DIR/../../../cp4ba-logger/scripts/logger.sh
+source $_SCRIPT_DIR/../../cp4ba-logger/scripts/logger.sh
 if [[ -z "${CP4BA_LOGGING_ENABLED}" ]]; then 
   export CP4BA_LOGGING_ENABLED=true
 fi

@@ -53,10 +53,10 @@ TBD
 Export configuration
 ```bash
 # authoring environment
-./cp4ba-list-export-configs.sh -c ../../../cp4ba-installations/configs25.0.1/env1-authoring-baw-bai.properties -s -d -e
+./cp4ba-list-export-configs.sh -c ../../cp4ba-installations/configs25.0.1/env1-authoring-baw-bai.properties -s -d -e
 
 # runtime environment
-./cp4ba-list-export-configs.sh -c ../../../cp4ba-installations/configs25.0.1/env1-runtime-baw-bai.properties -s -d -e
+./cp4ba-list-export-configs.sh -c ../../cp4ba-installations/configs25.0.1/env1-runtime-baw-bai.properties -s -d -e
 ```
 
 Set configuration
