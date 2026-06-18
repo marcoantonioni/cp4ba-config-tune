@@ -62,10 +62,10 @@ Export configuration
 Set configuration
 ```bash
 # authoring environment
-./cp4ba-create-custom-xml-secrets.sh -c ../../../cp4ba-installations/configs25.0.1/env1-authoring-baw-bai.properties
+./cp4ba-create-custom-xml-secrets.sh -c ../../cp4ba-installations/configs25.0.1/env1-authoring-baw-bai.properties
 
 # runtime environment
-./cp4ba-create-custom-xml-secrets.sh -c ../../../cp4ba-installations/configs25.0.1/env1-runtime-baw-bai.properties
+./cp4ba-create-custom-xml-secrets.sh -c ../../cp4ba-installations/configs25.0.1/env1-runtime-baw-bai.properties
 ```
 
 Restart pods of Statefulset
