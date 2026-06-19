@@ -55,6 +55,9 @@ Export configuration
 # authoring environment
 ./cp4ba-list-export-configs.sh -c ../../cp4ba-installations/configs25.0.1/env1-authoring-baw-bai.properties -s -d -e
 
+# wfps authoring environment (same as BAW uses BAStudio)
+./cp4ba-list-export-configs.sh -c ../../cp4ba-installations/configs25.0.1/env1-authoring-wfps.properties -s -d -e
+
 # runtime environment
 ./cp4ba-list-export-configs.sh -c ../../cp4ba-installations/configs25.0.1/env1-runtime-baw-bai.properties -s -d -e
 ```
@@ -64,10 +67,19 @@ Set configuration
 # authoring environment
 ./cp4ba-create-custom-xml-secrets.sh -c ../../cp4ba-installations/configs25.0.1/env1-authoring-baw-bai.properties
 
+./cp4ba-create-custom-xml-secrets.sh -c ../../cp4ba-installations/configs25.0.1/env1-authoring-baw-bai.properties -p -t baw -s bas
+
+# wfps authoring environment (same as BAW uses BAStudio)
+./cp4ba-create-custom-xml-secrets.sh -c ../../cp4ba-installations/configs25.0.1/env1-authoring-wfps.properties
+
+./cp4ba-create-custom-xml-secrets.sh -c ../../cp4ba-installations/configs25.0.1/env1-authoring-wfps.properties -p -t wfps -w bas
+
 # runtime environment
 ./cp4ba-create-custom-xml-secrets.sh -c ../../cp4ba-installations/configs25.0.1/env1-runtime-baw-bai.properties
 
-./cp4ba-create-custom-xml-secrets.sh -c ../../cp4ba-installations/configs25.0.1/env1-runtime-baw-bai.properties -p -s baw1
+./cp4ba-create-custom-xml-secrets.sh -c ../../cp4ba-installations/configs25.0.1/env1-runtime-baw-bai.properties -p -t baw -s baw1
+
+./cp4ba-create-custom-xml-secrets.sh -c ../../cp4ba-installations/configs25.0.1/env1-runtime-wfps.properties -p -t wfps -w wfps-demo-1
 
 ```
 
@@ -76,6 +88,9 @@ Restart pods of Statefulset
 
 # authoring environment
 ./cp4ba-restart-statefulset.sh -c ../../cp4ba-installations/configs25.0.1/env1-authoring-baw-bai.properties -t baw -s bas -w
+
+# wfps authoring environment (same as BAW uses BAStudio)
+./cp4ba-restart-statefulset.sh -c ../../cp4ba-installations/configs25.0.1/env1-authoring-wfps.properties -t baw -s bas -w
 
 # runtime environment BAW, graceful restart
 ./cp4ba-restart-statefulset.sh -c ../../cp4ba-installations/configs25.0.1/env1-runtime-baw-bai.properties -t baw -s baw1 -w
