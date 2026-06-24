@@ -381,6 +381,12 @@ createCustomXMLSecrets () {
     export CP4BA_INST_LOMBARDI_CUSTOM_XML_TEMPLATE_NAME="lombardi-custom-xml-template"
   fi
 
+  if [[ -z "${_SRV_NAME}" ]]; then
+    log_info "${_CLR_GREEN}Configuring authoring server for custom xml secrets"
+  else
+    log_info "${_CLR_GREEN}Configuring server '${_CLR_YELLOW}${_NAME}${_CLR_GREEN}' for custom xml secrets"
+  fi
+  
   log_info "${_CLR_GREEN}Using folder '${_CLR_YELLOW}${CP4BA_INST_CUSTOM_XML_FOLDER_NAME}${_CLR_GREEN}'"
 
   createLibertyXMLSecrets
