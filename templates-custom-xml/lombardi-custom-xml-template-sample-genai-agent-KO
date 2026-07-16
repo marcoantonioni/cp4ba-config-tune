@@ -1,5 +1,8 @@
 <properties>
   <server merge="mergeChildren">
+    <!-- AI Features START -->
+    <authData id="watsonx.ai_auth_alias" user="${CP4BA_INST_GENAI_WX_USERID}" password="${CP4BA_INST_GENAI_WX_APIKEY}" />
+    <!-- AI Features END -->
 
     <gen-ai merge="mergeChildren"> 
       <project-id>${CP4BA_INST_GENAI_WX_PRJ_ID}</project-id> 
