@@ -215,6 +215,7 @@ _createCustomXMLSecret () {
     _ERROR=1
     log_error "${_CLR_RED}Secret '${_CLR_YELLOW}${_SEC_NAME}${_CLR_RED}' NOT created !!!${_CLR_NC}"
   fi
+
   rm ${_SECRET_FILE_NAME} 2> /dev/null 1> /dev/null
 
 }
@@ -304,15 +305,6 @@ createLombardiXMLSecrets () {
   _FULL_PATH="${_SCRIPT_DIR}/../${CP4BA_INST_CUSTOM_XML_FOLDER_NAME}/${CP4BA_INST_LOMBARDI_CUSTOM_XML_TEMPLATE_NAME}"
   if [[ -f "${_FULL_PATH}" ]]; then
 
-    if [[ "${CP4BA_INST_BAS_GENAI_ENABLED}" = "true" ]]; then
-      if [[ -z "${CP4BA_INST_BAS_GENAI_WX_APIKEY}" ]]; then
-        log_warning "GenAI enabled but found WX ApiKey empty !"
-      fi
-      if [[ -z "${CP4BA_INST_BAS_GENAI_WX_PRJ_ID}" ]]; then
-        log_warning "GenAI enabled but found WX PrjID empty !"
-      fi
-    fi
-
     #---------------------------------------------
     # dynamic values, use following vars in your template
     export _AGENT_FQDN_BASE=$(oc cluster-info | sed 's/.*https:\/\/api.//g' | sed 's/:.*//g' | head -n1)
@@ -366,6 +358,31 @@ createLombardiXMLSecrets () {
   fi
 }
 
+createWxSecret () {
+
+  if [[ "${CP4BA_INST_GENAI_ENABLED}" = "true" ]]; then
+
+    if [[ ! -z "${CP4BA_INST_GENAI_WX_AUTH_SECRET}" && ! -z "${CP4BA_INST_GENAI_WX_USERID}" && ! -z "${CP4BA_INST_GENAI_WX_APIKEY}" ]]; then
+
+      oc delete secret -n ${CP4BA_INST_NAMESPACE} ${CP4BA_INST_GENAI_WX_AUTH_SECRET} 2>/dev/null 1>/dev/null
+
+      _WX_GENAI_TMP="${_INST_TMP_FOLDER}/cp4ba-wx-genai-$USER-$RANDOM"
+
+      echo '<server>' > ${_WX_GENAI_TMP}
+      echo '  <authData id="watsonx.ai_auth_alias" user="'${CP4BA_INST_GENAI_WX_USERID}'" password="'${CP4BA_INST_GENAI_WX_APIKEY}'"/>' >> ${_WX_GENAI_TMP}
+      echo '</server>' >> ${_WX_GENAI_TMP}
+
+      log_debug "Secret '${_CLR_YELLOW}${CP4BA_INST_GENAI_WX_AUTH_SECRET}${_CLR_NC}'"
+      oc create secret generic -n ${CP4BA_INST_NAMESPACE} ${CP4BA_INST_GENAI_WX_AUTH_SECRET} --from-file=sensitiveCustom.xml=${_WX_GENAI_TMP} 2>/dev/null 1>/dev/null
+
+      rm ${_WX_GENAI_TMP} 2>/dev/null 1>/dev/null
+    else
+      log_error "Cannot create watsonx secret, check GenAI parameters in config file '${_CFG}'"
+    fi
+  fi
+}
+
+
 createCustomXMLSecrets () {
 
   namespaceExist "${CP4BA_INST_NAMESPACE}"
@@ -397,6 +414,8 @@ createCustomXMLSecrets () {
   fi
   
   log_info "${_CLR_GREEN}Using folder '${_CLR_YELLOW}${CP4BA_INST_CUSTOM_XML_FOLDER_NAME}${_CLR_GREEN}'"
+
+  createWxSecret
 
   createLibertyXMLSecrets
   
