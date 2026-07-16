@@ -5,8 +5,8 @@
     <!-- AI Features END -->
 
     <gen-ai merge="mergeChildren"> 
-      <project-id>${CP4BA_INST_BAS_GENAI_WX_PRJ_ID}</project-id> 
-      <provider-url>${CP4BA_INST_BAS_GENAI_WX_URL_PROVIDER}</provider-url> 
+      <project-id>${CP4BA_INST_GENAI_WX_PRJ_ID}</project-id> 
+      <provider-url>${CP4BA_INST_GENAI_WX_URL_PROVIDER}</provider-url> 
       <auth-alias>watsonx.ai_auth_alias</auth-alias> 
       <read-timeout>120</read-timeout>
       <default-foundation-model>meta-llama/llama-3-3-70b-instruct</default-foundation-model>
