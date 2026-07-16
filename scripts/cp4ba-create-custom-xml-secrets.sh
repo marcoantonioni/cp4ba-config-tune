@@ -304,6 +304,15 @@ createLombardiXMLSecrets () {
   _FULL_PATH="${_SCRIPT_DIR}/../${CP4BA_INST_CUSTOM_XML_FOLDER_NAME}/${CP4BA_INST_LOMBARDI_CUSTOM_XML_TEMPLATE_NAME}"
   if [[ -f "${_FULL_PATH}" ]]; then
 
+    if [[ "${CP4BA_INST_BAS_GENAI_ENABLED}" = "true" ]]; then
+      if [[ -z "${CP4BA_INST_BAS_GENAI_WX_APIKEY}" ]]; then
+        log_warning "GenAI enabled but found WX ApiKey empty !"
+      fi
+      if [[ -z "${CP4BA_INST_BAS_GENAI_WX_PRJ_ID}" ]]; then
+        log_warning "GenAI enabled but found WX PrjID empty !"
+      fi
+    fi
+
     #---------------------------------------------
     # dynamic values, use following vars in your template
     export _AGENT_FQDN_BASE=$(oc cluster-info | sed 's/.*https:\/\/api.//g' | sed 's/:.*//g' | head -n1)
