@@ -9,7 +9,7 @@
     </gen-ai>
     <portal merge="mergeChildren">
       <agent-enable merge="replace">true</agent-enable>
-      <agent-endpoint merge="replace">${_AGENT_FQDN_FULL}/agent/runtimeChat</agent-endpoint>
+      <agent-endpoint merge="replace">${CP4BA_INST_CPD_CONSOLE_FQDN_FULL}/agent/runtimeChat</agent-endpoint>
     </portal>
     <wxo merge="mergeChildren">
       <token-url>${CP4BA_INST_WXO_TOKEN_URL}</token-url> 

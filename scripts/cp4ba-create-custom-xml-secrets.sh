@@ -307,8 +307,8 @@ createLombardiXMLSecrets () {
 
     #---------------------------------------------
     # dynamic values, use following vars in your template
-    export _AGENT_FQDN_BASE=$(oc cluster-info | sed 's/.*https:\/\/api.//g' | sed 's/:.*//g' | head -n1)
-    export _AGENT_FQDN_FULL="https://${CP4BA_INST_CPD_CONSOLE_PREFIX}.${_AGENT_FQDN_BASE}"
+    export CP4BA_INST_CPD_CONSOLE_FQDN_SUFFIX=$(oc cluster-info | sed 's/.*https:\/\/api.//g' | sed 's/:.*//g' | head -n1)
+    export CP4BA_INST_CPD_CONSOLE_FQDN_FULL="https://${CP4BA_INST_CPD_CONSOLE_PREFIX}.${CP4BA_INST_CPD_CONSOLE_FQDN_SUFFIX}"
 
     if [[ ${CP4BA_INST_OPT_COMPONENTS} == *"baw_authoring"* ]] || [[ ${CP4BA_INST_OPT_COMPONENTS} == *"wfps_authoring"* ]]; then
       _createCustomXMLSecret "${CP4BA_INST_LOMBARDI_CUSTOM_XML_SECRET_NAME}" "${CP4BA_INST_LOMBARDI_CUSTOM_XML_TEMPLATE_NAME}" "${_FULL_PATH}" "Lombardi"
