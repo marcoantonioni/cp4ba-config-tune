@@ -1,3 +1,6 @@
 <!-- empty skeleton -->
 <properties>
+  <server merge="mergeChildren">
+  </server>
 </properties>
+

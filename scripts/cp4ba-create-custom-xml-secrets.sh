@@ -400,13 +400,12 @@ createCustomXMLSecrets () {
   if [[ -z "${CP4BA_INST_CUSTOM_XML_FOLDER_NAME}" ]]; then
     export CP4BA_INST_CUSTOM_XML_FOLDER_NAME="templates-custom-xml"
   fi
-  
-  # if [[ -z "${CP4BA_INST_LIBERTY_CUSTOM_XML_TEMPLATE_NAME}" ]]; then
-  #   export CP4BA_INST_LIBERTY_CUSTOM_XML_TEMPLATE_NAME="liberty-custom-xml-template"
-  # fi
-  # if [[ -z "${CP4BA_INST_LOMBARDI_CUSTOM_XML_TEMPLATE_NAME}" ]]; then
-  #   export CP4BA_INST_LOMBARDI_CUSTOM_XML_TEMPLATE_NAME="lombardi-custom-xml-template"
-  # fi
+  if [[ -z "${CP4BA_INST_LIBERTY_CUSTOM_XML_TEMPLATE_NAME}" ]]; then
+    export CP4BA_INST_LIBERTY_CUSTOM_XML_TEMPLATE_NAME="liberty-custom-xml-template"
+  fi
+  if [[ -z "${CP4BA_INST_LOMBARDI_CUSTOM_XML_TEMPLATE_NAME}" ]]; then
+    export CP4BA_INST_LOMBARDI_CUSTOM_XML_TEMPLATE_NAME="lombardi-custom-xml-template"
+  fi
 
   if [[ -z "${_SRV_NAME}" ]]; then
     log_info "${_CLR_GREEN}Configuring authoring server for custom xml secrets"

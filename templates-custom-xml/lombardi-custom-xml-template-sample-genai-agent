@@ -1,6 +1,5 @@
 <properties>
   <server merge="mergeChildren">
-
     <gen-ai merge="mergeChildren"> 
       <project-id>${CP4BA_INST_GENAI_WX_PRJ_ID}</project-id> 
       <provider-url>${CP4BA_INST_GENAI_WX_URL_PROVIDER}</provider-url> 
