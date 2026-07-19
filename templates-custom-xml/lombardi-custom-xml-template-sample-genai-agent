@@ -1,5 +1,7 @@
 <properties>
   <server merge="mergeChildren">
+
+    <!-- GenAI Integration Services -->
     <gen-ai merge="mergeChildren"> 
       <project-id>${CP4BA_INST_GENAI_WX_PRJ_ID}</project-id> 
       <provider-url>${CP4BA_INST_GENAI_WX_URL_PROVIDER}</provider-url> 
@@ -7,15 +9,24 @@
       <read-timeout>120</read-timeout>
       <default-foundation-model>meta-llama/llama-3-3-70b-instruct</default-foundation-model>
     </gen-ai>
-    <portal merge="mergeChildren">
-      <agent-enable merge="replace">true</agent-enable>
-      <agent-endpoint merge="replace">${CP4BA_INST_CPD_CONSOLE_FQDN_FULL}/agent/runtimeChat</agent-endpoint>
-    </portal>
+
+    <!-- watsonx Orchestrate -->
     <wxo merge="mergeChildren">
       <token-url>${CP4BA_INST_WXO_TOKEN_URL}</token-url> 
       <discovery>
         <service-instance-url>${CP4BA_INST_WXO_SERVICE_INSTANCE_URL}</service-instance-url> 
       </discovery>
     </wxo>
+
+    <!-- Workplace Assistant -->
+    <portal merge="mergeChildren">
+      <agent-enable merge="replace">true</agent-enable>
+      <agent-endpoint merge="replace">${CP4BA_INST_CPD_CONSOLE_FQDN_FULL}/agent/runtimeChat</agent-endpoint>
+    </portal>
   </server>
+
+  <!-- Authoring Assistant-->
+  <authoring-environment>
+    <authoring-agent-endpoint merge="replace">${CP4BA_INST_CPD_CONSOLE_FQDN_FULL}/agent</authoring-agent-endpoint>
+  </authoring-environment>
 </properties>
