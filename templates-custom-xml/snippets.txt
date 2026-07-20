@@ -3,6 +3,61 @@
 #===================================================
 
 #--------------------------------------------
+# GIT repo
+
+_GIT_USER_ID="marcoantonioni"
+_GIT_USER_ALIAS="marcoantonioni"
+_GIT_TOKEN=""
+_GIT_REPO_NAME="test-cp4ba-cicd-sogei"
+
+_GIT_AUTH_SECRET_NAME="my-git-auth"
+_GIT_TLS_SECRET_NAME="my-git-tls"
+_GIT_REPO_URL="https://api.github.com/repos/${_GIT_USER_ID}/${_GIT_REPO_NAME}"
+_GIT_AUTH_DATA_FILE="./auth-data.xml"
+_GIT_CERT_FILE="./git.cert"
+
+echo '<?xml version="1.0" encoding="UTF-8"?>
+  <server>
+    <authData id="'${_GIT_USER_ALIAS}'" 
+              user="'${_GIT_USER_ID}'" 
+              password="'${_GIT_TOKEN}'"/>
+  </server>' > ${_GIT_AUTH_DATA_FILE}
+
+openssl s_client -showcerts -connect github.com:443 2>/dev/null | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > ${_GIT_CERT_FILE}
+
+_BASTUDIO_NAMESPACE="cp4ba-baw-auth"
+
+oc delete secret -n ${_BASTUDIO_NAMESPACE} ${_GIT_AUTH_SECRET_NAME} 2>/dev/null
+oc create secret generic -n ${_BASTUDIO_NAMESPACE} ${_GIT_AUTH_SECRET_NAME} --from-file=sensitiveCustom.xml=${_GIT_AUTH_DATA_FILE}
+
+oc delete secret -n ${_BASTUDIO_NAMESPACE} ${_GIT_TLS_SECRET_NAME} 2>/dev/null
+oc create secret generic -n ${_BASTUDIO_NAMESPACE} ${_GIT_TLS_SECRET_NAME} --from-file=tls.crt=${_GIT_CERT_FILE}
+
+
+    bastudio_custom_xml: |+
+      <properties>
+        <server>
+          <git-configuration merge="mergeChildren">
+            <git-endpoint-url>https://api.github.com/repos/marcoantonioni/test-cp4ba-cicd-sogei</git-endpoint-url>
+            <git-auth-alias-name>marcoantonioni</git-auth-alias-name>
+          </git-configuration>
+        </server>
+      </properties>
+    custom_secret_name: my-git-auth
+    tls:
+      tlsTrustList: [my-git-tls]
+
+
+# https://github.com/marcoantonioni/test-cp4ba-cicd-sogei
+
+<server>
+  <git-configuration merge="mergeChildren">
+    <git-endpoint-url>'${_GIT_REPO_URL}'</git-endpoint-url>
+    <git-auth-alias-name>'${_GIT_USER_ALIAS}'</git-auth-alias-name>
+  </git-configuration>
+</server>
+
+#--------------------------------------------
 Determine and fine-tune the MDB maxConcurrency parameter in IBM Cloud Pak for Business Automation (CP4BA) when using an external JMS configuration
 https://www.ibm.com/support/pages/node/7276075?myns=swgother&mynp=OCSSBYVB&mync=E&cm_sp=swgother-_-OCSSBYVB-_-E
 

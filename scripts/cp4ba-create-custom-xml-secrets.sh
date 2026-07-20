@@ -358,11 +358,47 @@ createLombardiXMLSecrets () {
   fi
 }
 
+createGitSecrets () {
+
+  if [[ "${CP4BA_INST_GIT_ENABLED}" = "true" ]]; then
+    if [[ -z "${CP4BA_INST_GIT_TOKEN}" ]]; then
+      log_warning "CP4BA_INST_GIT_TOKEN not set, authentication to repo endpoint will fail."
+    fi
+
+    _FULL_PATH="${_SCRIPT_DIR}/../${CP4BA_INST_CUSTOM_XML_FOLDER_NAME}/${CP4BA_INST_LIBERTY_CUSTOM_XML_TEMPLATE_NAME}"
+    if [[ -f "${_FULL_PATH}" ]]; then
+
+      if [[ ${CP4BA_INST_OPT_COMPONENTS} == *"baw_authoring"* ]] || [[ ${CP4BA_INST_OPT_COMPONENTS} == *"wfps_authoring"* ]]; then
+        # git certificate 
+        if [[ -z "${CP4BA_INST_GIT_TLS_SECRET_NAME}" ]]; then
+          export CP4BA_INST_GIT_TLS_SECRET_NAME="my-git-tls"
+        fi
+        log_info "${_CLR_GREEN}Configuring GIT TLS secret"
+        
+        _GIT_CERT_FILE="${_INST_TMP_FOLDER}/cp4ba-git-cert-$USER-$RANDOM"
+        openssl s_client -showcerts -connect ${CP4BA_INST_GIT_HOST_NAME}:${CP4BA_INST_GIT_HOST_PORT} 2>/dev/null | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > ${_GIT_CERT_FILE}
+
+        oc delete secret -n ${CP4BA_INST_NAMESPACE} ${CP4BA_INST_GIT_TLS_SECRET_NAME} 2>/dev/null 1>/dev/null
+        oc create secret generic -n ${CP4BA_INST_NAMESPACE} ${CP4BA_INST_GIT_TLS_SECRET_NAME} --from-file=tls.crt=${_GIT_CERT_FILE} 2>/dev/null 1>/dev/null
+
+        rm "${_GIT_CERT_FILE}"
+      else
+        log_error "Not an authoring environment, skip GIT configuration"
+      fi 
+
+    else
+      log_error "File not found '${_FULL_PATH}'"
+      export CP4BA_INST_LIBERTY_CUSTOM_XML_SECRET_NAME="null"
+    fi
+  fi
+}
+
 createWxSecret () {
 
   if [[ "${CP4BA_INST_GENAI_ENABLED}" = "true" ]]; then
 
     if [[ ! -z "${CP4BA_INST_GENAI_WX_AUTH_SECRET}" && ! -z "${CP4BA_INST_GENAI_WX_USERID}" && ! -z "${CP4BA_INST_GENAI_WX_APIKEY}" ]]; then
+      log_info "${_CLR_GREEN}Configuring watsonx secret"
 
       oc delete secret -n ${CP4BA_INST_NAMESPACE} ${CP4BA_INST_GENAI_WX_AUTH_SECRET} 2>/dev/null 1>/dev/null
 
@@ -422,6 +458,10 @@ createCustomXMLSecrets () {
   if [[ ! -z "${CP4BA_INST_LOMBARDI_CUSTOM_XML_TEMPLATE_NAME}" ]]; then
     createLombardiXMLSecrets
   fi
+
+  createWxSecret
+
+  createGitSecrets
 }
 
 patchCRBAW () {
@@ -512,6 +552,7 @@ log_info "${_CLR_GREEN}Creating custom xml secrets in '${_CLR_YELLOW}${CP4BA_INS
 setTemporaryFolder
 
 createCustomXMLSecrets
+
 if [[ "${_PATCH_CR}" = "true" ]]; then
   if [[ "${_SRVTYPE}" = "baw" ]]; then
     patchCRBAW

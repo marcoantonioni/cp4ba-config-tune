@@ -2,7 +2,7 @@
 <!-- BAW Runtime Liberty server properties -->
 <properties>
   <server merge="mergeChildren">
-    <!-- Settings related to the BAW runtime server -->
+    <!-- merge server here -->
 
     <!-- CUSTOM DB EXAMPLE -->
     <dataSource commitOrRollbackOnCleanup="commit" id="jdbc/${CP4BA_INST_DB_CUSTOMDB_NAME}" isolationLevel="TRANSACTION_READ_COMMITTED" jndiName="jdbc/${CP4BA_INST_DB_CUSTOMDB_NAME}" type="javax.sql.XADataSource">
@@ -12,4 +12,5 @@
     </dataSource>
 
   </server>
+  <!-- merge bastudio here -->
 </properties>

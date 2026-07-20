@@ -1,6 +1,8 @@
 <!-- empty skeleton -->
 <properties>
   <server merge="mergeChildren">
+    <!-- merge server here -->
   </server>
+  <!-- merge bastudio here -->
 </properties>
 
