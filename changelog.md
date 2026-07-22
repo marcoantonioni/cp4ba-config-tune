@@ -1,6 +1,17 @@
 
 # Change Log
 
+## [0.4] - 2026-07-22
+
+### Added
+
+### Changed
+
+CI/CD configurations
+
+### Fixed
+
+
 ## [0.3] - 2026-07-16
 
 ### Added
