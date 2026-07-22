@@ -1,0 +1,11 @@
+<properties>
+  <server merge="mergeChildren">
+
+    <!-- CI/CD with GIT -->
+    <git-configuration merge="mergeChildren">
+      <git-endpoint-url>${CP4BA_INST_GIT_ENDPOINT_URL}</git-endpoint-url>
+      <git-auth-alias-name>${CP4BA_INST_GIT_USER_ALIAS}</git-auth-alias-name>
+    </git-configuration>
+    
+  </server>
+</properties>
