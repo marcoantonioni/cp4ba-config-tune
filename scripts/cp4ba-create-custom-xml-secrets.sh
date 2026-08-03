@@ -371,7 +371,7 @@ createGitSecrets () {
       if [[ ${CP4BA_INST_OPT_COMPONENTS} == *"baw_authoring"* ]] || [[ ${CP4BA_INST_OPT_COMPONENTS} == *"wfps_authoring"* ]]; then
         # git certificate 
         if [[ -z "${CP4BA_INST_GIT_TLS_SECRET_NAME}" ]]; then
-          export CP4BA_INST_GIT_TLS_SECRET_NAME="my-git-tls"
+          export CP4BA_INST_GIT_TLS_SECRET_NAME="" # set secret name (eg: my-git-tls) only if CP4BA_INST_GIT_ENABLED="true" otherwise the bastudio pod will wait for a secret to trust the certificate
         fi
         log_info "${_CLR_GREEN}Configuring GIT TLS secret"
         
