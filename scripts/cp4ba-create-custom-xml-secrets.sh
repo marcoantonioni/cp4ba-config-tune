@@ -248,7 +248,7 @@ createLibertyXMLSecrets () {
   _FULL_PATH="${_SCRIPT_DIR}/../${CP4BA_INST_CUSTOM_XML_FOLDER_NAME}/${CP4BA_INST_LIBERTY_CUSTOM_XML_TEMPLATE_NAME}"
   if [[ -f "${_FULL_PATH}" ]]; then
 
-    if [[ ${CP4BA_INST_OPT_COMPONENTS} == *"baw_authoring"* ]] || [[ ${CP4BA_INST_OPT_COMPONENTS} == *"wfps_authoring"* ]]; then
+    if [[ ${CP4BA_INST_OPT_COMPONENTS} == *"baw_authoring"* ]] || [[ ${CP4BA_INST_OPT_COMPONENTS} == *"wfps_authoring"* ]] || [[ ${CP4BA_INST_OPT_COMPONENTS} == *"ads_designer"* ]]; then
       _createCustomXMLSecret "${CP4BA_INST_LIBERTY_CUSTOM_XML_SECRET_NAME}" "${CP4BA_INST_LIBERTY_CUSTOM_XML_TEMPLATE_NAME}" "${_FULL_PATH}" "Liberty"
     else
       _LIB_SEC_NAME=""
@@ -310,7 +310,7 @@ createLombardiXMLSecrets () {
     export CP4BA_INST_CPD_CONSOLE_FQDN_SUFFIX=$(oc cluster-info | sed 's/.*https:\/\/api.//g' | sed 's/:.*//g' | head -n1)
     export CP4BA_INST_CPD_CONSOLE_FQDN_FULL="https://${CP4BA_INST_CPD_CONSOLE_PREFIX}.${CP4BA_INST_CPD_CONSOLE_FQDN_SUFFIX}"
 
-    if [[ ${CP4BA_INST_OPT_COMPONENTS} == *"baw_authoring"* ]] || [[ ${CP4BA_INST_OPT_COMPONENTS} == *"wfps_authoring"* ]]; then
+    if [[ ${CP4BA_INST_OPT_COMPONENTS} == *"baw_authoring"* ]] || [[ ${CP4BA_INST_OPT_COMPONENTS} == *"wfps_authoring"* ]] || [[ ${CP4BA_INST_OPT_COMPONENTS} == *"ads_designer"* ]]; then
       _createCustomXMLSecret "${CP4BA_INST_LOMBARDI_CUSTOM_XML_SECRET_NAME}" "${CP4BA_INST_LOMBARDI_CUSTOM_XML_TEMPLATE_NAME}" "${_FULL_PATH}" "Lombardi"
     else
       _LOM_SEC_NAME=""
@@ -368,7 +368,7 @@ createGitSecrets () {
     _FULL_PATH="${_SCRIPT_DIR}/../${CP4BA_INST_CUSTOM_XML_FOLDER_NAME}/${CP4BA_INST_LIBERTY_CUSTOM_XML_TEMPLATE_NAME}"
     if [[ -f "${_FULL_PATH}" ]]; then
 
-      if [[ ${CP4BA_INST_OPT_COMPONENTS} == *"baw_authoring"* ]] || [[ ${CP4BA_INST_OPT_COMPONENTS} == *"wfps_authoring"* ]]; then
+      if [[ ${CP4BA_INST_OPT_COMPONENTS} == *"baw_authoring"* ]] || [[ ${CP4BA_INST_OPT_COMPONENTS} == *"wfps_authoring"* ]] || [[ ${CP4BA_INST_OPT_COMPONENTS} == *"ads_designer"* ]]; then
         # git certificate 
         if [[ -z "${CP4BA_INST_GIT_TLS_SECRET_NAME}" ]]; then
           export CP4BA_INST_GIT_TLS_SECRET_NAME="" # set secret name (eg: my-git-tls) only if CP4BA_INST_GIT_ENABLED="true" otherwise the bastudio pod will wait for a secret to trust the certificate
@@ -473,7 +473,7 @@ patchCRBAW () {
     exit 1
   fi
 
-  if [[ ${CP4BA_INST_OPT_COMPONENTS} == *"baw_authoring"* ]] || [[ ${CP4BA_INST_OPT_COMPONENTS} == *"wfps_authoring"* ]]; then
+  if [[ ${CP4BA_INST_OPT_COMPONENTS} == *"baw_authoring"* ]] || [[ ${CP4BA_INST_OPT_COMPONENTS} == *"wfps_authoring"* ]] || [[ ${CP4BA_INST_OPT_COMPONENTS} == *"ads_designer"* ]]; then
     log_info "${_CLR_GREEN}Patching authoring ICP4ACluster '${_CLR_YELLOW}${CP4BA_INST_CR_NAME}${_CLR_GREEN}' in namespace '${_CLR_YELLOW}${CP4BA_INST_NAMESPACE}${_CLR_GREEN}'"
 
     oc patch ICP4ACluster ${CP4BA_INST_CR_NAME} -n ${CP4BA_INST_NAMESPACE} --type=json -p '[{ "op": "replace", "path": "/spec/workflow_authoring_configuration/custom_xml_secret_name", "value": '${CP4BA_INST_LIBERTY_CUSTOM_XML_SECRET_NAME}' }]' 2>/dev/null 1>/dev/null
@@ -513,7 +513,7 @@ patchCRBAW () {
 }
 
 patchCRWFPS () {
-  if [[ ${CP4BA_INST_OPT_COMPONENTS} == *"baw_authoring"* ]] || [[ ${CP4BA_INST_OPT_COMPONENTS} == *"wfps_authoring"* ]]; then
+  if [[ ${CP4BA_INST_OPT_COMPONENTS} == *"baw_authoring"* ]] || [[ ${CP4BA_INST_OPT_COMPONENTS} == *"wfps_authoring"* ]] || [[ ${CP4BA_INST_OPT_COMPONENTS} == *"ads_designer"* ]]; then
     log_info "${_CLR_GREEN}Patching authoring ICP4ACluster (WFPS flavor) '${_CLR_YELLOW}${CP4BA_INST_CR_NAME}${_CLR_GREEN}' in namespace '${_CLR_YELLOW}${CP4BA_INST_NAMESPACE}${_CLR_GREEN}'"
 
     resourceExist "${CP4BA_INST_NAMESPACE}" "ICP4ACluster" "${CP4BA_INST_CR_NAME}"
