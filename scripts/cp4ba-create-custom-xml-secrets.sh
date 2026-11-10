@@ -215,7 +215,7 @@ _createCustomXMLSecret () {
     _ERROR=1
     log_error "${_CLR_RED}Secret '${_CLR_YELLOW}${_SEC_NAME}${_CLR_RED}' NOT created !!!${_CLR_NC}"
   fi
-
+cat ${_SECRET_FILE_NAME}
   rm ${_SECRET_FILE_NAME} 2> /dev/null 1> /dev/null
 
 }
