@@ -396,7 +396,6 @@ createGitSecrets () {
 createWxSecret () {
 
   if [[ "${CP4BA_INST_GENAI_ENABLED}" = "true" ]]; then
-
     if [[ ! -z "${CP4BA_INST_GENAI_WX_AUTH_SECRET}" && ! -z "${CP4BA_INST_GENAI_WX_USERID}" && ! -z "${CP4BA_INST_GENAI_WX_APIKEY}" ]]; then
       log_info "${_CLR_GREEN}Configuring watsonx secret"
 
@@ -413,7 +412,7 @@ createWxSecret () {
 
       rm ${_WX_GENAI_TMP} 2>/dev/null 1>/dev/null
     else
-      log_error "Cannot create watsonx secret, check GenAI parameters in config file '${_CFG}'"
+      log_warning "Watsonx secret not configured [CP4BA_INST_GENAI_WX_AUTH_SECRET, CP4BA_INST_GENAI_WX_USERID, CP4BA_INST_GENAI_WX_APIKEY]."
     fi
   fi
 }
