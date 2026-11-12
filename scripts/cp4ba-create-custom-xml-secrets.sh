@@ -412,7 +412,7 @@ createWxSecret () {
 
       rm ${_WX_GENAI_TMP} 2>/dev/null 1>/dev/null
     else
-      log_warning "Watsonx secret not configured [CP4BA_INST_GENAI_WX_AUTH_SECRET, CP4BA_INST_GENAI_WX_USERID, CP4BA_INST_GENAI_WX_APIKEY]."
+      log_info "Watsonx secret (watsonx.ai_auth_alias) not configured, see CP4BA_INST_GENAI_WX... variables."
     fi
   fi
 }
